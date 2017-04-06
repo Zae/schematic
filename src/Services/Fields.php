@@ -16,7 +16,7 @@ use NerdsAndCompany\Schematic\Models\FieldFactory;
  * Sync Craft Setups.
  *
  * @author    Nerds & Company
- * @copyright Copyright (c) 2015-2016, Nerds & Company
+ * @copyright Copyright (c) 2015-2017, Nerds & Company
  * @license   MIT
  *
  * @link      http://www.nerds.company
@@ -148,7 +148,7 @@ class Fields extends Base
 
                     $group = $this->createFieldGroupModel($name);
 
-                    $this->importFields($fieldDefinitions, $group);
+                    $this->importFields($fieldDefinitions, $group, $force);
 
                     $this->commitTransaction();
                 } catch (\Exception $e) {
@@ -284,10 +284,11 @@ class Fields extends Base
      *
      * @param array           $fieldDefinitions
      * @param FieldGroupModel $group
+     * @param bool            $force
      *
      * @throws \Exception
      */
-    private function importFields(array $fieldDefinitions, FieldGroupModel $group)
+    private function importFields(array $fieldDefinitions, FieldGroupModel $group, $force = false)
     {
         $fieldFactory = $this->getFieldFactory();
 
@@ -302,7 +303,7 @@ class Fields extends Base
 
             Craft::log(Craft::t('Importing `{name}`', ['name' => $fieldDef['name']]));
 
-            $schematicFieldModel->populate($fieldDef, $field, $fieldHandle, $group);
+            $schematicFieldModel->populate($fieldDef, $field, $fieldHandle, $group, $force);
             $this->saveFieldModel($field);
         }
     }

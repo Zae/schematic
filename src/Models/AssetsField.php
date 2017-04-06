@@ -12,7 +12,7 @@ use Craft\FieldGroupModel;
  * A schematic field model for mapping asset data
  *
  * @author    Nerds & Company
- * @copyright Copyright (c) 2015-2016, Nerds & Company
+ * @copyright Copyright (c) 2015-2017, Nerds & Company
  * @license   MIT
  *
  * @link      http://www.nerds.company
@@ -52,10 +52,11 @@ class AssetsField extends Field
      * @param FieldModel           $field
      * @param string               $fieldHandle
      * @param FieldGroupModel|null $group
+     * @param bool                 $force
      */
-    public function populate(array $fieldDefinition, FieldModel $field, $fieldHandle, FieldGroupModel $group = null)
+    public function populate(array $fieldDefinition, FieldModel $field, $fieldHandle, FieldGroupModel $group = null, $force = false)
     {
-        parent::populate($fieldDefinition, $field, $fieldHandle, $group);
+        parent::populate($fieldDefinition, $field, $fieldHandle, $group, $force);
 
         $settings = $field->settings;
 

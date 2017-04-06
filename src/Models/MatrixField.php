@@ -14,7 +14,7 @@ use Craft\MatrixBlockTypeModel;
  * A schematic field model for mapping matrix data
  *
  * @author    Nerds & Company
- * @copyright Copyright (c) 2015-2016, Nerds & Company
+ * @copyright Copyright (c) 2015-2017, Nerds & Company
  * @license   MIT
  *
  * @link      http://www.nerds.company
@@ -88,15 +88,16 @@ class MatrixField extends Field
      * @param FieldModel           $field
      * @param string               $fieldHandle
      * @param FieldGroupModel|null $group
+     * @param bool                 $force
      */
-    public function populate(array $fieldDefinition, FieldModel $field, $fieldHandle, FieldGroupModel $group = null)
+    public function populate(array $fieldDefinition, FieldModel $field, $fieldHandle, FieldGroupModel $group = null, $force = false)
     {
         parent::populate($fieldDefinition, $field, $fieldHandle, $group);
 
         /** @var MatrixSettingsModel $settingsModel */
         $settingsModel = $field->getFieldType()->getSettings();
         $settingsModel->setAttributes($fieldDefinition['settings']);
-        $settingsModel->setBlockTypes($this->getBlockTypes($fieldDefinition, $field));
+        $settingsModel->setBlockTypes($this->getBlockTypes($fieldDefinition, $field, $force));
         $field->settings = $settingsModel;
     }
 
@@ -105,12 +106,22 @@ class MatrixField extends Field
      *
      * @param array      $fieldDefinition
      * @param FieldModel $field
+     * @param bool       $force
      *
      * @return mixed
      */
-    protected function getBlockTypes(array $fieldDefinition, FieldModel $field)
+    protected function getBlockTypes(array $fieldDefinition, FieldModel $field, $force = false)
     {
         $blockTypes = $this->getMatrixService()->getBlockTypesByFieldId($field->id, 'handle');
+
+        //delete old blocktypes if they are missing from the definition.
+        if ($force) {
+            foreach ($blockTypes as $key => $value) {
+                if (!array_key_exists($key, $fieldDefinition['blockTypes'])) {
+                    unset($blockTypes[$key]);
+                }
+            }
+        }
 
         foreach ($fieldDefinition['blockTypes'] as $blockTypeHandle => $blockTypeDef) {
             $blockType = array_key_exists($blockTypeHandle, $blockTypes)

@@ -12,7 +12,7 @@ use Craft\SuperTable_BlockTypeModel;
  * A schematic field model for mapping super table data
  *
  * @author    Nerds & Company
- * @copyright Copyright (c) 2015-2016, Nerds & Company
+ * @copyright Copyright (c) 2015-2017, Nerds & Company
  * @license   MIT
  *
  * @link      http://www.nerds.company
@@ -60,10 +60,11 @@ class SuperTableField extends MatrixField
     /**
      * @param array      $fieldDefinition
      * @param FieldModel $field
+     * @param bool       $force
      *
      * @return SuperTable_BlockTypeModel[]
      */
-    protected function getBlockTypes(array $fieldDefinition, FieldModel $field)
+    protected function getBlockTypes(array $fieldDefinition, FieldModel $field, $force = false)
     {
         $blockTypes = $this->getSuperTableService()->getBlockTypesByFieldId($field->id);
 
