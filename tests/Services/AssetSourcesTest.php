@@ -3,8 +3,8 @@
 namespace NerdsAndCompany\Schematic\Services;
 
 use Craft\BaseTest;
-use Craft\TagsService;
-use Craft\TagGroupModel;
+use Craft\AssetSourcesService;
+use Craft\AssetSourceModel;
 use Craft\Craft;
 use Craft\DbCommand;
 use Craft\DbConnection;
@@ -14,19 +14,19 @@ use NerdsAndCompany\Schematic\Models\Result;
 use PHPUnit_Framework_MockObject_MockObject as Mock;
 
 /**
- * Class TagGroupsTest.
+ * Class AssetSourcesTest.
  *
  * @author    Nerds & Company
  * @copyright Copyright (c) 2015-2017, Nerds & Company
  * @license   MIT
  *
- * @link      http://www.nerds.company
+ * @see      http://www.nerds.company
  *
- * @coversDefaultClass NerdsAndCompany\Schematic\Services\TagGroups
+ * @coversDefaultClass \NerdsAndCompany\Schematic\Services\AssetSources
  * @covers ::__construct
  * @covers ::<!public>
  */
-class TagGroupsTest extends BaseTest
+class AssetSourcesTest extends BaseTest
 {
     //==============================================================================================================
     //=================================================  TESTS  ====================================================
@@ -34,38 +34,38 @@ class TagGroupsTest extends BaseTest
 
     /**
      * @covers ::export
-     * @dataProvider provideValidTagGroups
+     * @dataProvider provideValidAssetSources
      *
-     * @param TagGroupModel[] $groups
-     * @param array           $expectedResult
+     * @param AssetSourceModel[] $assetSources
+     * @param array              $expectedResult
      */
-    public function testSuccessfulExport(array $groups, array $expectedResult = [])
+    public function testSuccessfulExport(array $assetSources, array $expectedResult = [])
     {
         $this->setMockFieldsService();
         $this->setMockSchematicFields();
 
-        $schematicTagGroupsService = new TagGroups();
+        $schematicAssetSourcesService = new AssetSources();
 
-        $actualResult = $schematicTagGroupsService->export($groups);
+        $actualResult = $schematicAssetSourcesService->export($assetSources);
 
         $this->assertSame($expectedResult, $actualResult);
     }
 
     /**
      * @covers ::import
-     * @dataProvider provideValidTagGroupDefinitions
+     * @dataProvider provideValidAssetSourceDefinitions
      *
-     * @param array $groupDefinitions
+     * @param array $assetSourceDefinitions
      */
-    public function testSuccessfulImport(array $groupDefinitions)
+    public function testSuccessfulImport(array $assetSourceDefinitions)
     {
-        $this->setMockTagsService();
+        $this->setMockAssetSourcesService();
         $this->setMockDbConnection();
         $this->setMockSchematicFields();
 
-        $schematicUserGroupsService = new TagGroups();
+        $schematicAssetSourcesService = new AssetSources();
 
-        $import = $schematicUserGroupsService->import($groupDefinitions);
+        $import = $schematicAssetSourcesService->import($assetSourceDefinitions);
 
         $this->assertInstanceOf(Result::class, $import);
         $this->assertFalse($import->hasErrors());
@@ -73,19 +73,19 @@ class TagGroupsTest extends BaseTest
 
     /**
      * @covers ::import
-     * @dataProvider provideValidTagGroupDefinitions
+     * @dataProvider provideValidAssetSourceDefinitions
      *
-     * @param array $groupDefinitions
+     * @param array $assetSourceDefinitions
      */
-    public function testImportWithForceOption(array $groupDefinitions)
+    public function testImportWithForceOption(array $assetSourceDefinitions)
     {
-        $this->setMockTagsService();
+        $this->setMockAssetSourcesService();
         $this->setMockDbConnection();
         $this->setMockSchematicFields();
 
-        $schematicUserGroupsService = new TagGroups();
+        $schematicAssetSourcesService = new AssetSources();
 
-        $import = $schematicUserGroupsService->import($groupDefinitions, true);
+        $import = $schematicAssetSourcesService->import($assetSourceDefinitions, true);
 
         $this->assertInstanceOf(Result::class, $import);
         $this->assertFalse($import->hasErrors());
@@ -98,40 +98,49 @@ class TagGroupsTest extends BaseTest
     /**
      * @return array
      */
-    public function provideValidTagGroups()
+    public function provideValidAssetSources()
     {
         return [
             'emptyArray' => [
-                'TagGroups' => [],
+                'AssetSources' => [],
                 'expectedResult' => [],
             ],
-            'single group' => [
-                'TagGroups' => [
-                    'group1' => $this->getMockTagGroup(1),
+            'single asset source' => [
+                'AssetSources' => [
+                    'assetSource1' => $this->getMockAssetSource(1),
                 ],
                 'expectedResult' => [
-                    'groupHandle1' => [
-                        'name' => 'groupName1',
+                    'assetSourceHandle1' => [
+                        'type' => null,
+                        'name' => 'assetSourceName1',
+                        'sortOrder' => null,
+                        'settings' => null,
                         'fieldLayout' => [
                             'fields' => [],
                         ],
                     ],
                 ],
             ],
-            'multiple groups' => [
-                'TagGroups' => [
-                    'group1' => $this->getMockTagGroup(1),
-                    'group2' => $this->getMockTagGroup(2),
+            'multiple asset sources' => [
+                'AssetSources' => [
+                    'assetSource1' => $this->getMockAssetSource(1),
+                    'assetSource2' => $this->getMockAssetSource(2),
                 ],
                 'expectedResult' => [
-                    'groupHandle1' => [
-                        'name' => 'groupName1',
+                    'assetSourceHandle1' => [
+                        'type' => null,
+                        'name' => 'assetSourceName1',
+                        'sortOrder' => null,
+                        'settings' => null,
                         'fieldLayout' => [
                             'fields' => [],
                         ],
                     ],
-                    'groupHandle2' => [
-                        'name' => 'groupName2',
+                    'assetSourceHandle2' => [
+                        'type' => null,
+                        'name' => 'assetSourceName2',
+                        'sortOrder' => null,
+                        'settings' => null,
                         'fieldLayout' => [
                             'fields' => [],
                         ],
@@ -144,16 +153,19 @@ class TagGroupsTest extends BaseTest
     /**
      * @return array
      */
-    public function provideValidTagGroupDefinitions()
+    public function provideValidAssetSourceDefinitions()
     {
         return [
             'emptyArray' => [
-                'groupDefinitions' => [],
+                'assetSourceDefinitions' => [],
             ],
             'single group' => [
-                'groupDefinitions' => [
-                    'groupHandle1' => [
-                        'name' => 'groupName1',
+                'assetSourceDefinitions' => [
+                    'assetSourceHandle1' => [
+                        'type' => 'Local',
+                        'name' => 'assetSourceName1',
+                        'sortOrder' => 1,
+                        'settings' => array(),
                         'fieldLayout' => [
                             'fields' => [],
                         ],
@@ -168,37 +180,32 @@ class TagGroupsTest extends BaseTest
     //==============================================================================================================
 
     /**
-     * @param string $groupId
+     * @param string $assetSourceId
      *
-     * @return Mock|TagGroupModel
+     * @return Mock|AssetSourceModel
      */
-    private function getMockTagGroup($groupId)
+    private function getMockAssetSource($assetSourceId)
     {
-        $mockTagGroup = $this->getMockBuilder(TagGroupModel::class)
-            ->setMethods(['__get', 'getAllErrors', 'getFieldLayout'])
-            //->disableOriginalConstructor()
+        $mockAssetSource = $this->getMockBuilder(AssetSourceModel::class)
+            ->disableOriginalConstructor()
             ->getMock();
 
-        $mockTagGroup->expects($this->any())
+        $mockAssetSource->expects($this->any())
             ->method('__get')
             ->willReturnMap([
-                ['id', $groupId],
-                ['fieldLayoutId', $groupId],
-                ['handle', 'groupHandle'.$groupId],
-                ['name', 'groupName'.$groupId],
+                ['id', $assetSourceId],
+                ['fieldLayoutId', $assetSourceId],
+                ['handle', 'assetSourceHandle'.$assetSourceId],
+                ['name', 'assetSourceName'.$assetSourceId],
             ]);
 
-        $mockTagGroup->expects($this->any())
+        $mockAssetSource->expects($this->any())
             ->method('getAllErrors')
             ->willReturn([
                 'ohnoes' => 'horrible error',
             ]);
 
-        $mockTagGroup->expects($this->any())
-            ->method('getFieldLayout')
-            ->willReturn($this->getMockFieldLayout());
-
-        return $mockTagGroup;
+        return $mockAssetSource;
     }
 
     /**
@@ -245,23 +252,23 @@ class TagGroupsTest extends BaseTest
     }
 
     /**
-     * @return Mock|TagsService
+     * @return Mock|AssetSourcesService
      */
-    private function setMockTagsService()
+    private function setMockAssetSourcesService()
     {
-        $mockTagsService = $this->getMockBuilder(TagsService::class)
+        $mockAssetSourcesService = $this->getMockBuilder(AssetSourcesService::class)
             ->disableOriginalConstructor()
-            ->setMethods(['getAllTagGroups', 'saveTagGroup', 'deleteTagGroupById'])
+            ->setMethods(['getAllSources', 'saveSource', 'deleteSourceById'])
             ->getMock();
 
-        $mockTagsService->expects($this->any())
-            ->method('getAllTagGroups')
+        $mockAssetSourcesService->expects($this->any())
+            ->method('getAllSources')
             ->with('handle')
             ->willReturn([]);
 
-        $this->setComponent(Craft::app(), 'tags', $mockTagsService);
+        $this->setComponent(Craft::app(), 'assetSources', $mockAssetSourcesService);
 
-        return $mockTagsService;
+        return $mockAssetSourcesService;
     }
 
     /**

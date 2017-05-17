@@ -65,7 +65,7 @@ class App extends Base
         if ($appId = $this->config->get('appId')) {
             $this->setId($appId);
         }
-        
+
         // Initialize Cache and LogRouter right away (order is important)
         $this->getComponent('cache');
         $this->getComponent('log');
@@ -316,8 +316,8 @@ class App extends Base
             'schematic_assetSources' => [
                 'class' => Service\AssetSources::class,
             ],
-            'schematic_assetTransformations' => [
-                'class' => Service\AssetTransformations::class,
+            'schematic_assetTransforms' => [
+                'class' => Service\AssetTransforms::class,
             ],
             'schematic_fields' => [
                 'class' => Service\Fields::class,
@@ -342,6 +342,9 @@ class App extends Base
             ],
             'schematic_tagGroups' => [
                 'class' => Service\TagGroups::class,
+            ],
+            'schematic_sources' => [
+                'class' => Service\Sources::class,
             ],
         ];
 

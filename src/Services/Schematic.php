@@ -29,7 +29,7 @@ class Schematic extends BaseApplication
         'locales',
         'routes',
         'assetSources',
-        'assetTransformations',
+        'assetTransforms',
         'fields',
         'plugins',
         'sections',
@@ -132,8 +132,8 @@ class Schematic extends BaseApplication
         $assetSources = $model->getAttribute('assetSources');
         $assetSourcesImportResult = Craft::app()->schematic_assetSources->import($assetSources, $force);
 
-        $assetTransformations = $model->getAttribute('assetTransformations');
-        $assetTransformationImportResult = Craft::app()->schematic_assetTransformations->import($assetTransformations, $force);
+        $assetTransforms = $model->getAttribute('assetTransforms');
+        $assetTransformsImportResult = Craft::app()->schematic_assetTransforms->import($assetTransforms, $force);
 
         $globalSets = $model->getAttribute('globalSets');
         $globalSetsImportResult = Craft::app()->schematic_globalSets->import($globalSets, $force);
@@ -171,7 +171,7 @@ class Schematic extends BaseApplication
         $result->consume($pluginImportResult);
         $result->consume($fieldImportResult);
         $result->consume($assetSourcesImportResult);
-        $result->consume($assetTransformationImportResult);
+        $result->consume($assetTransformsImportResult);
         $result->consume($globalSetsImportResult);
         $result->consume($sectionImportResult);
         $result->consume($categoryGroupImportResult);
@@ -237,6 +237,8 @@ class Schematic extends BaseApplication
             $dataTypes = $this->exportableDataTypes;
         }
 
+        $assetSources = Craft::app()->assetSources->getAllSources();
+        $assetTransforms = Craft::app()->assetTransforms->getAllTransforms();
         $categoryGroups = Craft::app()->categories->getAllGroups();
         $tagGroups = Craft::app()->tags->getAllTagGroups();
 
@@ -251,11 +253,11 @@ class Schematic extends BaseApplication
         }
 
         if (in_array('assetSources', $dataTypes)) {
-            $export['assetSources'] = Craft::app()->schematic_assetSources->export();
+            $export['assetSources'] = Craft::app()->schematic_assetSources->export($assetSources);
         }
 
-        if (in_array('assetTransformations', $dataTypes)) {
-            $export['assetTransformations'] = Craft::app()->schematic_assetTransformations->export();
+        if (in_array('assetTransforms', $dataTypes)) {
+            $export['assetTransforms'] = Craft::app()->schematic_assetTransforms->export($assetTransforms);
         }
 
         if (in_array('fields', $dataTypes)) {

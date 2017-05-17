@@ -1,25 +1,16 @@
-# Schematic [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/itmundi/schematic/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/itmundi/schematic/?branch=master) [![Build Status](https://travis-ci.org/nerds-and-company/schematic.svg?branch=master)](https://travis-ci.org/nerds-and-company/schematic) [![Code Coverage](https://scrutinizer-ci.com/g/itmundi/schematic/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/itmundi/schematic/?branch=master) [![Latest Stable Version](https://poser.pugx.org/itmundi/schematic/v/stable)](https://packagist.org/packages/itmundi/schematic) [![Total Downloads](https://poser.pugx.org/itmundi/schematic/downloads)](https://packagist.org/packages/itmundi/schematic) [![Latest Unstable Version](https://poser.pugx.org/itmundi/schematic/v/unstable)](https://packagist.org/packages/itmundi/schematic) [![License](https://poser.pugx.org/itmundi/schematic/license)](https://packagist.org/packages/itmundi/schematic)
+# Schematic [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nerds-and-company/schematic/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/nerds-and-company/schematic/?branch=master) [![Build Status](https://travis-ci.org/nerds-and-company/schematic.svg?branch=master)](https://travis-ci.org/nerds-and-company/schematic) [![Code Coverage](https://scrutinizer-ci.com/g/nerds-and-company/schematic/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/nerds-and-company/schematic/?branch=master) [![Latest Stable Version](https://poser.pugx.org/nerds-and-company/schematic/v/stable)](https://packagist.org/packages/nerds-and-company/schematic) [![Total Downloads](https://poser.pugx.org/nerds-and-company/schematic/downloads)](https://packagist.org/packages/nerds-and-company/schematic) [![Latest Unstable Version](https://poser.pugx.org/nerds-and-company/schematic/v/unstable)](https://packagist.org/packages/nerds-and-company/schematic) [![License](https://poser.pugx.org/nerds-and-company/schematic/license)](https://packagist.org/packages/nerds-and-company/schematic)
 
 Schematic allows you to synchronize your Craft setup over multiple environments. It does this by exporting information about assets,  database (fields, sections, users), locales and plugins to a YAML file that can be imported in other environments.
 
 ## Installation
 
-This tool can be installed manually or [using Composer](https://getcomposer.org/doc/00-intro.md).
-
-### Composer
-
-The preferred means of installation is through Composer. Run the following command from the root of your project:
+This tool can be installed [using Composer](https://getcomposer.org/doc/00-intro.md). Run the following command from the root of your project:
 
 ```
-composer require itmundi/schematic
+composer require nerds-and-company/schematic
 ```
 
-This will add `itmundi/schematic` as a requirement to your  project's `composer.json` file and install the source-code into the `vendor/itmundi/schematic` directory. Composer will also create the executable `vendor/bin/schematic`.
-
-### Manual
-
-If installation through Composer is not an option, the package can also be installed manually. Download [the latest release](https://github.com/itmundi/schematic/releases/latest) or clone the contents of this repository into your project.
-The executable is located in at `bin/schematic`.
+This will add `nerds-and-company/schematic` as a requirement to your  project's `composer.json` file and install the source-code into the `vendor/nerds-and-company/schematic` directory. Composer will also create the executable `vendor/bin/schematic`.
 
 ## Usage
 
@@ -66,6 +57,7 @@ Here is a list of all of the data types and their corresponding exclude paramete
 | Data Type | Exlude Parameter |
 | ------------- |-------------|
 | Asset Sources | assetSources |
+| Asset Transforms | assetTransforms |
 | Category Groups | categoryGroups |
 | Element Indexes | elementIndexSettings |
 | Fields | fields |
@@ -195,6 +187,10 @@ class Plugin_CustomSchematicFieldModel extends \NerdsAndCompany\Schematic\Models
 
 ```
 
+## See also
+
+For synchronizing Craft Commerce schema's, please see the [Schematic Commerce](https://github.com/nerds-and-company/schematic-commerce) package.
+
 ## License
 
 This project has been licensed under the MIT License (MIT). Please see [License File](LICENSE) for more information.
@@ -204,4 +200,4 @@ This project has been licensed under the MIT License (MIT). Please see [License 
 [CHANGELOG.md](CHANGELOG.md)
 
 ## Credits
-Inspired and based on the awesome [ArtVandelay Plugin](https://github.com/xodigital/ArtVandelay) and build by [these awesome individuals](https://github.com/itmundi/schematic/graphs/contributors)
+Inspired and based on the awesome [ArtVandelay Plugin](https://github.com/xodigital/ArtVandelay) and built by [these awesome individuals](https://github.com/nerds-and-company/schematic/graphs/contributors)

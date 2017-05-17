@@ -3,6 +3,8 @@
 namespace NerdsAndCompany\Schematic\Services;
 
 use Craft\BaseTest;
+use Craft\AssetSourcesService;
+use Craft\AssetTransformsService;
 use Craft\CategoriesService;
 use Craft\Craft;
 use Craft\FieldsService;
@@ -191,6 +193,34 @@ class SchematicTest extends BaseTest
     }
 
     /**
+     * @return Mock|AssetSourcesService
+     */
+    public function getMockAssetSourcesService()
+    {
+        $mock = $this->getMockBuilder(AssetSourcesService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mock->expects($this->exactly(1))->method('getAllSources')->willReturn([]);
+
+        return $mock;
+    }
+
+    /**
+     * @return Mock|AssetTransformsService
+     */
+    public function getMockAssetTransformsService()
+    {
+        $mock = $this->getMockBuilder(AssetTransformsService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $mock->expects($this->exactly(1))->method('getAllTransforms')->willReturn([]);
+
+        return $mock;
+    }
+
+    /**
      * @return Mock|CategoriesService
      */
     public function getMockCategoriesService()
@@ -225,6 +255,7 @@ class SchematicTest extends BaseTest
     {
         $this->createMockService(Locales::class, 'schematic_locales');
         $this->createMockService(AssetSources::class, 'schematic_assetSources');
+        $this->createMockService(AssetTransforms::class, 'schematic_assetTransforms');
         $this->createMockService(Fields::class, 'schematic_fields');
         $this->createMockService(GlobalSets::class, 'schematic_globalSets');
         $this->createMockService(Plugins::class, 'schematic_plugins');
@@ -279,6 +310,12 @@ class SchematicTest extends BaseTest
 
         $mockUserGroupsService = $this->getMockAllGroupsMethodService(UserGroupsService::class);
         $this->setCraftComponent('userGroups', $mockUserGroupsService);
+
+        $mockAssetSourcesService = $this->getMockAssetSourcesService();
+        $this->setCraftComponent('assetSources', $mockAssetSourcesService);
+
+        $mockAssetTransformsService = $this->getMockAssetTransformsService();
+        $this->setCraftComponent('assetTransforms', $mockAssetTransformsService);
 
         $mockCategoriesService = $this->getMockCategoriesService();
         $this->setCraftComponent('categories', $mockCategoriesService);
