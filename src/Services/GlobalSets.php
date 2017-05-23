@@ -76,9 +76,6 @@ class GlobalSets extends Base
 
             $this->populateGlobalSet($global, $globalSetDefinition, $globalSetHandle);
 
-            // Register the proper autoloader
-            require_once(CRAFT_APP_PATH . CRAFT_VENDOR_PATH . 'autoload.php');
-
             if (!Craft::app()->globals->saveSet($global)) { // Save globalset via craft
                 $this->addErrors($global->getAllErrors());
 
