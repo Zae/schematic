@@ -27,6 +27,7 @@ class Schematic extends BaseApplication
 
     protected static $exportableDataTypes = [
         'locales',
+        'routes',
         'assetSources',
         'assetTransforms',
         'fields',
@@ -137,7 +138,7 @@ class Schematic extends BaseApplication
             $localesImportResult = Craft::app()->schematic_locales->import($locales);
         }
 
-        if (in_array('assetSources', $dataTypes)) {
+        if (in_array('plugins', $dataTypes)) {
             $plugins = $model->getAttribute('plugins', $force);
             $pluginImportResult = Craft::app()->schematic_plugins->import($plugins);
         }
@@ -283,6 +284,10 @@ class Schematic extends BaseApplication
 
         if (in_array('locales', $dataTypes)) {
             $export['locales'] = Craft::app()->schematic_locales->export();
+        }
+
+        if (in_array('routes', $dataTypes)) {
+            $export['routes'] = Craft::app()->schematic_routes->export();
         }
 
         if (in_array('assetSources', $dataTypes)) {
