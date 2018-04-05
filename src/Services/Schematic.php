@@ -63,22 +63,29 @@ class Schematic extends BaseApplication
     /**
      * Import from Yaml file.
      *
-     * @param string $file
+     * @param string $folder
      * @param string $override
-     * @param bool   $force if set to true items not included in import will be deleted
-     * @param string $dataTypes The data types to import
+     * @param bool   $force    if set to true items not included in import will be deleted
      *
      * @return Result
-     * @throws Exception
      */
-    public function importFromYaml($file, $override = null, $force = false, $dataTypes = 'all')
+    public function importFromYaml($folder, $override = null, $force = false, $dataTypes = 'all')
     {
         Craft::app()->config->maxPowerCaptain();
         Craft::app()->setComponent('userSession', $this);
 
-        $yaml = IOHelper::getFileContents($file);
-        $yaml_override = IOHelper::getFileContents($override);
-        $dataModel = Data::fromYaml($yaml, $yaml_override);
+        $data = collect(glob("$folder/*.yml"))
+            ->mapWithKeys(function($file) use ($override) {
+                $yaml = IOHelper::getFileContents($file);
+                $yaml_override = IOHelper::getFileContents($override);
+
+                $key = basename($file, '.yml');
+
+                return [$key => Data::fromYaml($yaml, $yaml_override)->attributes[$key]];
+            })
+            ->toArray();
+
+        $dataModel = new Data($data);
 
         return $this->importDataModel($dataModel, $force, $dataTypes);
     }
@@ -86,23 +93,28 @@ class Schematic extends BaseApplication
     /**
      * Export to Yaml file.
      *
-     * @param string $file
+     * @param string $folder
      * @param bool   $autoCreate
      *
      * @return Result
      */
-    public function exportToYaml($file, $dataTypes = 'all', $autoCreate = true)
+    public function exportToYaml($folder, $dataTypes = 'all', $autoCreate = true)
     {
         Craft::app()->config->maxPowerCaptain();
         Craft::app()->setComponent('userSession', $this);
 
         $result = new Result();
         $dataModel = $this->exportDataModel($dataTypes);
-        $yaml = Data::toYaml($dataModel);
 
-        if (!IOHelper::writeToFile($file, $yaml, $autoCreate)) { // Do not auto create
-            $result->addError('errors', "Failed to write contents to \"$file\"");
-        }
+        collect($dataModel)->filter()->each(function($elem, $key) use ($folder, $autoCreate) {
+            $yaml = Data::toYaml([$key => $elem]);
+
+            $file = "${folder}/${key}.yml";
+
+            if (!IOHelper::writeToFile($file, $yaml, $autoCreate)) { // Do not auto create
+                $result->addError('errors', "Failed to write contents to \"$file\"");
+            }
+        });
 
         return $result;
     }

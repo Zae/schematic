@@ -23,17 +23,17 @@ class ImportCommand extends Base
     /**
      * Imports the Craft datamodel.
      *
-     * @param string $file          yml file containing the schema definition
+     * @param string $folder        yml folder containing the schema definition
      * @param string $override_file yml file containing the override values
      * @param bool   $force         if set to true items not in the import will be deleted
      * @param array  $exclude       Data to not import
      *
      * @return int
      */
-    public function actionIndex($file = 'craft/config/schema.yml', $override_file = 'craft/config/override.yml', $force = false, array $exclude = null)
+    public function actionIndex($folder = 'craft/config/', $override_file = 'craft/config/override.yml', $force = false, array $exclude = null)
     {
-        if (!IOHelper::fileExists($file)) {
-            $this->usageError(Craft::t('File not found.'));
+        if (!IOHelper::folderExists($folder)) {
+            $this->usageError(Craft::t('Folder not found.'));
         }
 
         $dataTypes = Schematic::getExportableDataTypes();
@@ -64,15 +64,15 @@ class ImportCommand extends Base
             $dataTypes = array_diff($dataTypes, $exclude);
         }
 
-        $result = Craft::app()->schematic->importFromYaml($file, $override_file, $force, $dataTypes);
+        $result = Craft::app()->schematic->importFromYaml($folder, $override_file, $force, $dataTypes);
 
         if (!$result->hasErrors()) {
-            Craft::log(Craft::t('Loaded schema from {file}', ['file' => $file]));
+            Craft::log(Craft::t('Loaded schema from {$folder}', ['$folder' => $folder]));
 
             return 0;
         }
 
-        Craft::log(Craft::t('There was an error loading schema from {file}', ['file' => $file]));
+        Craft::log(Craft::t('There was an error loading schema from {folder}', ['folder' => $folder]));
         print_r($result->getErrors());
 
         return 1;

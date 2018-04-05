@@ -22,12 +22,12 @@ class ExportCommand extends Base
     /**
      * Exports the Craft datamodel.
      *
-     * @param string $file    file to write the schema to
+     * @param string $folder  folder to write the schemas to
      * @param array  $exclude Data to not export
      *
      * @return int
      */
-    public function actionIndex($file = 'craft/config/schema.yml', array $exclude = null)
+    public function actionIndex($folder = 'craft/config/', array $exclude = null)
     {
         $dataTypes = Schematic::getExportableDataTypes();
 
@@ -57,9 +57,9 @@ class ExportCommand extends Base
             $dataTypes = array_diff($dataTypes, $exclude);
         }
 
-        Craft::app()->schematic->exportToYaml($file, $dataTypes);
+        Craft::app()->schematic->exportToYaml($folder, $dataTypes);
 
-        Craft::log(Craft::t('Exported schema to {file}', ['file' => $file]));
+        Craft::log(Craft::t('Exported schemas to {folder}', ['folder' => $folder]));
 
         return 0;
     }
