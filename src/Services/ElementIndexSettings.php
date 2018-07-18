@@ -109,6 +109,15 @@ class ElementIndexSettings extends Base
                 $mappedSettings['sources'][$mappedSource] = ['tableAttributes' => $tableAttributesSettings];
             }
         }
+        
+        if (isset($settings['sourceOrder'])) {
+            foreach ($settings['sourceOrder'] as $source => $sourceSettings) {
+                if (!empty($sourceSettings[0]) && !empty($sourceSettings[1])) {
+                    $mappedSource = Craft::app()->schematic_sources->getSource(false, $sourceSettings[1], $fromIndex, $toIndex);
+                    $mappedSettings['sourceOrder'][] = [$sourceSettings[0], $mappedSource];
+                }
+            }
+        }
 
         return $mappedSettings;
     }
